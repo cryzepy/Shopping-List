@@ -4,8 +4,8 @@ let list_item_box;
 
 
 // utility
-const X_MASTER_KEY = '$2b$10$ccGM0WKEWD0bdaANFD7LIOqliu3Hy5EaDIntILvgs3hdFm7Egk9Te';
-const BIN_ID = '62e4a53560c3536f3fc8b18e';
+const X_MASTER_KEY = 'ONLY FOR PERSONAL (fikrialfian)';
+const BIN_ID = 'ONLY FOR PERSONAL (fikrialfian)';
 
 
 // database - START
@@ -33,12 +33,12 @@ function data_server(action){
         case 'PUT':
             req.onreadystatechange = () => {
                 if (req.readyState == XMLHttpRequest.DONE) {
-                    if(req.responseText) {
-                        alert('SUCCESS UPDATE TO SERVER')
-                        render()
+                    if(req.status == 200) {
+                        alert('SUCCESS UPDATE TO SERVER');
                     } else {
-                        alert('FAILED UPDATE TO SERVER')
+                        alert('FAILED UPDATE TO SERVER');
                     }
+                    render();
                 }
             };
             req.setRequestHeader("Content-Type", "application/json");
@@ -47,13 +47,16 @@ function data_server(action){
         case 'GET':
             req.onreadystatechange = () => {
                 if (req.readyState == XMLHttpRequest.DONE) {
-                    if (req.response) {
+
+                    if(req.status == 200){
                         const data = JSON.parse(req.response).record;
                         local_database({type:'SET',data:data});
-                        render()
-                    } else {
-                        alert('FAILED : please check your internet connection')
+                        render();
+                        return
                     }
+
+                    alert(`FAILED : Gagal Mengambil Data`);
+                    render();
                 }
             };
             req.send();
