@@ -8,11 +8,15 @@ html{
     font-family: 'BeVietnamPro-Medium';
     text-align: center;
     background: darkslateblue;
-    font-size: 9px
+    font-size: 9px;
+    margin-bottom: 3rem
 }
-body{
-    margin: 3.8rem .5rem
+
+* {
+    margin: 0;
+    padding: 0
 }
+
 input,button{
     border: none;
     outline: none;
@@ -25,7 +29,8 @@ input,button{
 /*non-utility*/
 .brand-header{
     color: white;
-    font-size: 2.6rem
+    font-size: 2.6rem;
+    margin: 4rem
 }
 .menu-setting > i {
     position: absolute;
@@ -44,6 +49,7 @@ input,button{
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1
 }
 .input-box {
     position: fixed;
@@ -60,6 +66,7 @@ input,button{
     border-radius: 2px;
     max-width: 92vw;
     width: 46rem;
+    z-index: 99
 }
 .input-box .input-item {
     border: 1px solid rgba(0,0,0,.1);
@@ -97,6 +104,7 @@ input,button{
     transition: 250ms;
     transform: scale(1);
     font-size: 2.4rem;
+    padding: 1rem
 }
 .add-item i:active {
     transform: scale(.9);
@@ -120,6 +128,7 @@ input,button{
     right: 0;
     left: 0;
     background: rgba(0,0,0,.35);
+    z-index: 1
 }
 .child-container-select-sorted{
     position: fixed;
@@ -136,6 +145,7 @@ input,button{
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 2
 }
 .child-container-select-sorted > li{
     font-size: 1.8rem;
@@ -164,7 +174,7 @@ input,button{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: .5rem;
+    gap: 4px;
     margin: .7rem 0;
 }
 .list-items .item {
@@ -246,4 +256,15 @@ li:hover .set-item :nth-child(2) {
 li:hover .set-item :nth-child(3) {
     transform: translateX(0);
     opacity: 1;
+}
+
+footer {
+    background: white;
+    font-size: 1.2rem;
+    padding: 1rem;
+    color: rgb(255, 78, 78);
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0
 }
