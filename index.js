@@ -234,6 +234,57 @@ function handle_duplicate_input(props){
 
     return false
 }
+
+function checkAccess(){
+
+    // KUNCI KETIKA TIDAK FOKUS SELAMA 7 MENIT
+
+    const name = "istimeforkeyaccess";
+    const gtime = localStorage.getItem(name);
+    let time;
+
+    if(gtime === null || isNaN(gtime)){
+        time = Date.now();
+        access({
+            method: "STOP"
+        });
+    }else{
+        time = +gtime;
+    }
+
+    if(time > Date.now()){
+        return true;
+    }
+
+    return false;
+}
+
+function getAccess(){
+    const get = prompt("input the password ? ");
+    if(get === "is"){
+        access({
+            method: "ADD"
+        })
+        render();
+    }else{
+        alert("password salah !!!");
+    }
+}
+
+function access(payload){
+    let time;
+    switch(payload.method){
+        case "ADD":
+            time = Date.now() + 1000 * 60 * 7;
+            break;
+        case "STOP":
+            time = Date.now() -2;
+            break;
+        default:
+            time = Date.now() -2;
+    }
+    localStorage.setItem("istimeforkeyaccess",time);
+}
 // utility - END
 
 
@@ -404,6 +455,31 @@ function add_menu_setting_el(){
     })
 
     clickEvent(child,add_setting_el)
+}
+
+function add_key_access_el(){
+    const container = element_builder({
+        tag: 'div',
+        parent: root,
+        attributes: {
+            class: 'btn-key-access'
+        }
+    })
+
+    const child = element_builder({
+        tag: 'i',
+        parent: container,
+        attributes: {
+            class: 'bi bi-key btn'
+        }
+    })
+
+    clickEvent(child,() => {
+        access({
+            method: "STOP"
+        });
+        render();
+    })
 }
 
 function add_total_price_el(){
@@ -666,19 +742,27 @@ function add_setting_el(){
 
 function render(){
     root.innerHTML = ''
+    
+    const access = checkAccess();
+    
+    if(access){
+        // header 
+        add_brand_el();
+        add_add_btn_el();
 
-    // header 
-    add_brand_el()
-    add_add_btn_el()
+        // content
+        add_li_container();
 
-    // content
-    add_li_container()
+        // footer
+        local_database({type:'GET'}).length && add_total_price_el();
+        add_menu_setting_el();
+    }else{
+        setTimeout(getAccess,200)
+    }
 
-    // footer
-    local_database({type:'GET'}).length && add_total_price_el()
-    add_menu_setting_el()
+    add_key_access_el();    
 }
 // element - END
 
 
-render()
+render();
