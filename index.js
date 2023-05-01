@@ -1,5 +1,6 @@
 let PROMPT = true;
 const TIME = 1000 * 60 * 7;
+const PRODUCTION = true;
 
 // element 
 const root = getEL('#root');
@@ -451,29 +452,32 @@ function add_menu_setting_el(){
 }
 
 function add_key_access_el(){
-    const container = element_builder({
-        tag: 'div',
-        parent: root,
-        attributes: {
-            class: 'btn-key-access'
-        }
-    })
 
-    const child = element_builder({
-        tag: 'i',
-        parent: container,
-        attributes: {
-            class: 'bi bi-key btn',
-            id: "btn-key"
-        }
-    })
+    if(!PRODUCTION){
+        const container = element_builder({
+            tag: 'div',
+            parent: root,
+            attributes: {
+                class: 'btn-key-access'
+            }
+        })
 
-    clickEvent(child,() => {
-        access({
-            method: "STOP"
-        });
-        running();
-    })
+        const child = element_builder({
+            tag: 'i',
+            parent: container,
+            attributes: {
+                class: 'bi bi-key btn',
+                id: "btn-key"
+            }
+        })
+
+        clickEvent(child,() => {
+            access({
+                method: "STOP"
+            });
+            running();
+        })
+    }
 }
 
 function add_total_price_el(){
@@ -704,8 +708,8 @@ function add_setting_el(){
 
     const [del,set,get] = add_popup_el([
         data.length && { inner: 'Delete All Data' },
-        data.length && { inner: 'Update Data To Server' },
-        { inner: 'Update Data From Server' }
+        data.length && !PRODUCTION && { inner: 'Update Data To Server' },
+        !PRODUCTION && { inner: 'Update Data From Server' }
         ])
 
     del && clickEvent(del,() =>{
@@ -799,7 +803,14 @@ function render(){
 // element - END
 
 const running = () => {
-    const access = checkAccess();
+    root.innerHTML = "";
+    let access;
+    if(PRODUCTION){
+        access = true;
+    }else{
+        access = checkAccess();
+    }
+    
     if(access){
         render();
         setTimeout(() => {
