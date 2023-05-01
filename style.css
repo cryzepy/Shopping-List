@@ -265,6 +265,48 @@ li:hover .set-item :nth-child(3) {
     opacity: 1;
 }
 
+.prompt-container {
+    background-color: black;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prompt {
+    background-color: white;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    max-width: 88vw;
+    padding: 2rem;
+    border-radius: 2px;
+    gap: 2rem;
+}
+
+.prompt input, .prompt .btn button {
+    font-family: "BeVietnamPro-Medium";
+    background-color: black;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 2px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+
+.prompt .btn button {
+    border-radius: 3px;
+    margin: 0 3px;
+    font-size: 1.3rem;
+    padding:  .7rem 1rem;
+}
+
 footer {
     background: white;
     font-size: 1rem;

@@ -1,3 +1,6 @@
+let PROMPT = true;
+const TIME = 1000 * 60 * 7;
+
 // element 
 const root = getEL('#root');
 let list_item_box;
@@ -38,7 +41,6 @@ function data_server(action){
                     } else {
                         alert('FAILED UPDATE TO SERVER');
                     }
-                    render();
                 }
             };
             req.setRequestHeader("Content-Type", "application/json");
@@ -51,12 +53,12 @@ function data_server(action){
                     if(req.status == 200){
                         const data = JSON.parse(req.response).record;
                         local_database({type:'SET',data:data});
-                        render();
+                        running();
                         return
                     }
 
                     alert(`FAILED : Gagal Mengambil Data`);
-                    render();
+                    running();
                 }
             };
             req.send();
@@ -207,7 +209,7 @@ function handle_change_data(props){
             })
             break;
     }
-    render()
+    running()
 }
 
 function clickEvent(element,func){
@@ -231,14 +233,10 @@ function handle_duplicate_input(props){
             return true
         }
     }
-
     return false
 }
 
 function checkAccess(){
-
-    // KUNCI KETIKA TIDAK FOKUS SELAMA 7 MENIT
-
     const name = "istimeforkeyaccess";
     const gtime = localStorage.getItem(name);
     let time;
@@ -252,22 +250,16 @@ function checkAccess(){
         time = +gtime;
     }
 
-    if(time > Date.now()){
-        return true;
-    }
-
-    return false;
+    return time > Date.now() ? true : false;
 }
 
-function getAccess(){
-    const get = prompt("input the password ? ");
-    if(get === "is"){
-        access({
-            method: "ADD"
-        })
-        render();
+function getAccess(query){
+    if(query === "is"){
+        access({ method: "ADD" });
+        running();
     }else{
         alert("password salah !!!");
+        access({ method: "STOP" });
     }
 }
 
@@ -275,7 +267,8 @@ function access(payload){
     let time;
     switch(payload.method){
         case "ADD":
-            time = Date.now() + 1000 * 60 * 7;
+            // time = Date.now() + 1000 * 60 * 7;
+            time = Date.now() + TIME;
             break;
         case "STOP":
             time = Date.now() -2;
@@ -470,7 +463,8 @@ function add_key_access_el(){
         tag: 'i',
         parent: container,
         attributes: {
-            class: 'bi bi-key btn'
+            class: 'bi bi-key btn',
+            id: "btn-key"
         }
     })
 
@@ -478,7 +472,7 @@ function add_key_access_el(){
         access({
             method: "STOP"
         });
-        render();
+        running();
     })
 }
 
@@ -535,7 +529,7 @@ function add_sort_by_el(){
                 }
 
                 order_by({type:'SET',nama:temp})
-                render()
+                running()
             })
         })
     })
@@ -693,7 +687,7 @@ function add_input_item_el(props) {
                 }
             })
 
-            render()
+            running()
         }
 
         function handleFailed(){
@@ -717,7 +711,7 @@ function add_setting_el(){
     del && clickEvent(del,() =>{
         if (action_confirm()) {
             local_database({type:'DEL'});
-            render()
+            running()
         }else{
             alert('invalid input')
         }        
@@ -740,29 +734,81 @@ function add_setting_el(){
     })
 }
 
+function add_prompt_el(){
+    const container = element_builder({
+        tag: "div",
+        parent: document.body,
+        attributes: {
+            class: "prompt-container"
+        }
+    })
+
+    const prompt = element_builder({
+        tag: "div",
+        parent: container,
+        attributes: {
+            class: "prompt"
+        }
+    })
+
+    const input = element_builder({
+        tag: "input",
+        parent: prompt,
+        attributes: {
+            type: "text"
+        }
+    })
+
+    const btn = element_builder({
+        tag: "div",
+        parent: prompt,
+        attributes: {
+            class: "btn"
+        }
+    })
+
+    const login = element_builder({
+        tag: "button",
+        parent: btn,
+        innerText: "Log In"
+    })
+
+    clickEvent(login, () => {
+        const query = input.value;
+        getAccess(query);
+        running();
+        container.remove();
+    })
+}
+
 function render(){
-    root.innerHTML = ''
-    
-    const access = checkAccess();
-    
-    if(access){
-        // header 
-        add_brand_el();
-        add_add_btn_el();
+    root.innerHTML = "";
+    // header 
+    add_brand_el();
+    add_add_btn_el();
 
-        // content
-        add_li_container();
+    // content
+    add_li_container();
 
-        // footer
-        local_database({type:'GET'}).length && add_total_price_el();
-        add_menu_setting_el();
-    }else{
-        setTimeout(getAccess,200)
-    }
+    // footer
+    local_database({type:'GET'}).length && add_total_price_el();
+    add_menu_setting_el();
 
     add_key_access_el();    
 }
 // element - END
 
+const running = () => {
+    const access = checkAccess();
+    if(access){
+        render();
+        setTimeout(() => {
+            running();
+        },TIME)
+    }else{
+        add_prompt_el();
+    }
+}
 
-render();
+
+running();
