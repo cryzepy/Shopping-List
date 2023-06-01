@@ -1,4 +1,3 @@
-let PROMPT = true;
 const TIME = 1000 * 60 * 7;
 const PRODUCTION = true;
 
@@ -255,7 +254,7 @@ function checkAccess(){
 }
 
 function getAccess(query){
-    if(query === "is"){
+    if(query.toLowerCase() === "is"){
         access({ method: "ADD" });
         running();
     }else{
@@ -743,7 +742,8 @@ function add_prompt_el(){
         tag: "div",
         parent: document.body,
         attributes: {
-            class: "prompt-container"
+            class: "prompt-container",
+            id: "prompt-container"
         }
     })
 
@@ -759,7 +759,8 @@ function add_prompt_el(){
         tag: "input",
         parent: prompt,
         attributes: {
-            type: "text"
+            type: "text",
+            id : "text-input-password"
         }
     })
 
@@ -777,11 +778,19 @@ function add_prompt_el(){
         innerText: "Log In"
     })
 
+    input.addEventListener("keyup", event => {
+        if(event.key === "Enter"){
+            login.click()
+        }
+    })
+
     clickEvent(login, () => {
         const query = input.value;
         getAccess(query);
         running();
-        container.remove();
+        if(checkAccess()){
+            container.remove();
+        }
     })
 }
 
@@ -817,7 +826,10 @@ const running = () => {
             running();
         },TIME)
     }else{
-        add_prompt_el();
+        if(getEL("#prompt-container") === null){
+            add_prompt_el();
+            getEL("#text-input-password").focus()
+        }
     }
 }
 
