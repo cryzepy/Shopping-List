@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>insert code</title>
+
+    <style>
+      @font-face {
+        font-family: "BeVietnamPro-Medium";
+        src: url("BeVietnamPro-Medium.woff");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "BeVietnamPro-Medium", sans-serif;
+      }
+
+      body {
+        background-color: darkslateblue;
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      main > h1 {
+        color: white;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .form {
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        border-radius: 2px;
+        gap: 0.3rem;
+      }
+
+      .form > * {
+        padding: 0.65rem 1.3rem;
+        border-radius: 2px;
+        border: none;
+        outline: none;
+      }
+
+      .form button {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <h1>Insert Code</h1>
+      <div class="form">
+        <input type="text" placeholder="x master key" id="x-master-key" />
+        <input type="text" placeholder="bin id" id="bin-id" />
+        <button onclick="insertCode()">insert code</button>
+        <button id="btn-back">back</button>
+      </div>
+    </main>
+
+    <script>
+      function insertCode() {
+        const xMasterKey = document.getElementById("x-master-key");
+        const binId = document.getElementById("bin-id");
+
+        localStorage.setItem(
+          "x-master-key-from-shopping-list",
+          xMasterKey.value
+        );
+        localStorage.setItem("bin-id-from-shopping-list", binId.value);
+
+        xMasterKey.value = ""
+        binId.value = ""
+      }
+
+      document
+        .getElementById("btn-back")
+        .addEventListener("click", function () {
+          window.location.href = "index.html";
+        });
+    </script>
+  </body>
+</html>
