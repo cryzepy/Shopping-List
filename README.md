@@ -1,5 +1,5 @@
 # Tentang Website
-website ini di buat untuk manajemen daftar belajaan
+website dibuat untuk manajemen daftar belajaan
 
 # Fitur Website
 - menambahkan , menghapus dan menyunting daftar belanjaan
